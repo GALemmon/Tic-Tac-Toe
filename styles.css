@@ -27,46 +27,75 @@ main {
 
 .game-square {
   text-align: center;
-  /* height: 30px;
-  width: 30px; */
+  height: 30px;
+  width: 30px;
 }
 
-#square1 {
+.player1 {
+  background-image: url(./assets/Captain-America-Shield.svg);
+}
+
+.player2 {
+  background-image: url(./assets/Iron-Man.svg);
+}
+
+.hidden {
+  display: none;
+}
+
+#result {
+  display: flex;
+}
+
+/* .disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+} */
+
+/* #square1 {
   border-bottom: solid;
   border-right: solid;
+  pointer-events: ;
 }
 
 #square2 {
   border-bottom: solid;
+  pointer-events: ;
 }
 
 #square3 {
   border-left: solid;
   border-bottom: solid;
+  pointer-events: ;
 }
 
 #square4 {
   border-right: solid;
+  pointer-events: ;
 }
 
 #square5 {
-
+  pointer-events: ;
 }
 
 #square6 {
   border-left: solid;
+  pointer-events: ;
 }
 
 #square7 {
   border-top: solid;
   border-right: solid;
+  pointer-events: ;
 }
 
 #square8 {
   border-top: solid;
+  pointer-events: ;
 }
 
 #square9 {
   border-top: solid;
   border-left: solid;
-}
+  pointer-events: ;
+} */
