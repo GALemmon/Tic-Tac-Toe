@@ -1,13 +1,12 @@
 
 //------------ Query Selectors -------------
-var gameArea = document.querySelector('.game-area');
 var player1WinCounter = document.getElementById('player1WinCounter');
 var player2WinCounter = document.getElementById('player2WinCounter');
 var gameResult = document.getElementById('result');
+var gameGrid = document.querySelector('.game-grid');
+var gameSquareBtns = document.querySelector('.game-square')
 
 //--------------- Buttons -------------------
-var gameSquareBtns = document.querySelector('.game-grid');
-var buttons = document.getElementsByTagName('button');
 var square1 = document.getElementById('square1');
 var square2 = document.getElementById('square2');
 var square3 = document.getElementById('square3');
@@ -18,9 +17,8 @@ var square7 = document.getElementById('square7');
 var square8 = document.getElementById('square8');
 var square9 = document.getElementById('square9');
 
-
 //----------- Global Variables --------------
-var gameSquares = [square1, square2, square3, square4, square5, square6, square7, square8, square9]
+var gameSquares = [square1, square2, square3, square4, square5, square6, square7, square8, square9];
 var winningCombos = [
   ['square1', 'square2', 'square3'],
   ['square4', 'square5', 'square6'],
@@ -33,15 +31,15 @@ var winningCombos = [
 ];
 var currentGame = [];
 var p1 = true;
-var winner = '';
 var player1WinTotal = 0;
 var player2WinTotal = 0;
 var p1Moves = [];
 var p2Moves = [];
+var totalMovesTaken = 0;
 
 //------------ Event Listners ---------------
 window.addEventListener('load', cleanGameBoard);
-gameSquareBtns.addEventListener('click', makeMove);
+gameGrid.addEventListener('click', makeMove);
 
 //---------------- Functions ----------------
 function cleanGameBoard() {
@@ -57,12 +55,13 @@ function resetGlobalVars() {
   p1 = currentGame[0].currentPlayer1;
   p1Moves = currentGame[0].player1Moves;
   p2Moves = currentGame[0].player2Moves;
-}
+  totalMovesTaken = 0;
+};
 
 function resetSquares() {
   for (var i = 0; i < gameSquares.length; i++) {
     gameSquares[i].disabled = false;
-    gameSquares[i].classList.remove('player1', 'player2', 'disabled')
+    gameSquares[i].classList.remove('player1', 'player2', 'disabled');
   };
 };
 
@@ -71,23 +70,25 @@ function resetHTML() {
   player2WinCounter.innerText = `${player2WinTotal}`;
   gameResult.innerText = '';
   hide(gameResult);
-  show(gameSquareBtns);
-}
+  show(gameGrid);
+};
 
 function makeMove() {
+  totalMovesTaken++;
   logMove();
   markSquares();
   checkWin();
+  checkDraw();
   changePlayer();
 };
 
 function logMove() {
   for (var i = 0; i < gameSquares.length; i++) {
     if (event.target.id === gameSquares[i].id && p1) {
-      gameSquares[i].disabled = true
+      gameSquares[i].disabled = true;
       addToPlayer1(gameSquares[i]);
     } else if (event.target.id === gameSquares[i].id && !p1) {
-      gameSquares[i].disabled = true
+      gameSquares[i].disabled = true;
       addToPlayer2(gameSquares[i]);
     };
   };
@@ -129,15 +130,28 @@ function markPlayer2Square() {
 };
 
 function checkWin() {
-  var totalMovesTaken = p1Moves.length + p2Moves.length;
   for (i = 0; i < winningCombos.length; i++) {
     if (compareArrays(p1Moves, winningCombos[i])) {
       return player1Wins();
-    } else if (compareArrays(p2Moves, winningCombos[i])) {
+    } if (compareArrays(p2Moves, winningCombos[i])) {
       return player2Wins();
-    } else if (totalMovesTaken === 9) {
-      return declareDraw();
     };
+  };
+};
+
+function checkWinOnly() {
+  for (i = 0; i < winningCombos.length; i++) {
+    if (compareArrays(p1Moves, winningCombos[i])) {
+      return true;
+    } if (compareArrays(p2Moves, winningCombos[i])) {
+      return true;
+    };
+  };
+};
+
+function checkDraw() {
+  if (totalMovesTaken === 9) {
+    return checkWinOnly() ? checkWinOnly() : declareDraw();
   };
 };
 
@@ -154,22 +168,22 @@ function player1Wins() {
 
 function player2Wins() {
   player2WinTotal++;
-  announceResult('Player 2')
+  announceResult('Player 2');
   resetGame();
 };
 
 function announceResult(player) {
-  hide(gameSquareBtns);
+  hide(gameGrid);
   show(gameResult);
   gameResult.innerText = `${player} wins!`;
-}
+};
 
 function declareDraw() {
-  hide(gameSquareBtns);
+  hide(gameGrid);
   show(gameResult);
   gameResult.innerText = `The cat got the game!`;
   resetGame();
-}
+};
 
 function resetGame() {
   window.setTimeout(cleanGameBoard, 2500);

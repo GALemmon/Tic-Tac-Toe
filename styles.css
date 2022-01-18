@@ -22,13 +22,13 @@ main {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: minmax(53px, 1fr) 1fr 1fr 1fr;
+  grid-gap: 0fr;
 }
 
 .game-square {
   text-align: center;
-  height: 30px;
-  width: 30px;
 }
 
 .player1 {
@@ -45,57 +45,6 @@ main {
 
 #result {
   display: flex;
+  text-align: center;
+  font-size: large;
 }
-
-/* .disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-} */
-
-/* #square1 {
-  border-bottom: solid;
-  border-right: solid;
-  pointer-events: ;
-}
-
-#square2 {
-  border-bottom: solid;
-  pointer-events: ;
-}
-
-#square3 {
-  border-left: solid;
-  border-bottom: solid;
-  pointer-events: ;
-}
-
-#square4 {
-  border-right: solid;
-  pointer-events: ;
-}
-
-#square5 {
-  pointer-events: ;
-}
-
-#square6 {
-  border-left: solid;
-  pointer-events: ;
-}
-
-#square7 {
-  border-top: solid;
-  border-right: solid;
-  pointer-events: ;
-}
-
-#square8 {
-  border-top: solid;
-  pointer-events: ;
-}
-
-#square9 {
-  border-top: solid;
-  border-left: solid;
-  pointer-events: ;
-} */
