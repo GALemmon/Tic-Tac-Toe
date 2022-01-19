@@ -1,5 +1,5 @@
 * {
-  font-family: "OpenSans", bold;
+  font-family: "Lucida Console", "Courier New", monospace;
 }
 
 html {
@@ -23,7 +23,7 @@ main {
 .game-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: minmax(53px, 1fr) 1fr 1fr 1fr;
+  grid-template-rows: minmax(70px, 1fr) 1fr 1fr 1fr;
   grid-gap: 0fr;
 }
 

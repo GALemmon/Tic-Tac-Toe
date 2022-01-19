@@ -2,6 +2,7 @@
 //------------ Query Selectors -------------
 var player1WinCounter = document.getElementById('player1WinCounter');
 var player2WinCounter = document.getElementById('player2WinCounter');
+var turnDesignator = document.getElementById('turnDesignator');
 var gameResult = document.getElementById('result');
 var gameGrid = document.querySelector('.game-grid');
 var gameSquareBtns = document.querySelector('.game-square')
@@ -29,7 +30,9 @@ var winningCombos = [
   ['square1', 'square5', 'square9'],
   ['square3', 'square5', 'square7'],
 ];
-var currentGame = [];
+var games = [];
+var currentGame = games.slice(-1);
+var totalGames = 0;
 var p1 = true;
 var player1WinTotal = 0;
 var player2WinTotal = 0;
@@ -39,16 +42,25 @@ var totalMovesTaken = 0;
 
 //------------ Event Listners ---------------
 window.addEventListener('load', cleanGameBoard);
-gameGrid.addEventListener('click', makeMove);
+square1.addEventListener('click', makeMove);
+square2.addEventListener('click', makeMove);
+square3.addEventListener('click', makeMove);
+square4.addEventListener('click', makeMove);
+square5.addEventListener('click', makeMove);
+square6.addEventListener('click', makeMove);
+square7.addEventListener('click', makeMove);
+square8.addEventListener('click', makeMove);
+square9.addEventListener('click', makeMove);
 
 //---------------- Functions ----------------
 function cleanGameBoard() {
-  currentGame = [];
+  // currentGame = [];
   newGame = new Game();
-  currentGame.push(newGame);
+  games.push(newGame);
   resetGlobalVars();
   resetSquares();
   resetHTML();
+  selectFirstPlayer();
 };
 
 function resetGlobalVars() {
@@ -62,6 +74,7 @@ function resetSquares() {
   for (var i = 0; i < gameSquares.length; i++) {
     gameSquares[i].disabled = false;
     gameSquares[i].classList.remove('player1', 'player2', 'disabled');
+    gameSquares[i].addEventListener('click', makeMove);
   };
 };
 
@@ -71,10 +84,21 @@ function resetHTML() {
   gameResult.innerText = '';
   hide(gameResult);
   show(gameGrid);
+  show(turnDesignator);
+};
+
+function selectFirstPlayer() {
+  if (totalGames === 0 || totalGames % 2 === 0) {
+    p1 = true;
+  } else {
+    p1 = false;
+  };
+  designateTurn();
 };
 
 function makeMove() {
   totalMovesTaken++;
+  designateTurn();
   logMove();
   markSquares();
   checkWin();
@@ -82,10 +106,20 @@ function makeMove() {
   changePlayer();
 };
 
+function designateTurn() {
+  if (p1) {
+    turnDesignator.innerText = "Steve's turn.";
+  };
+  if (!p1) {
+    turnDesignator.innerText = "Tony's turn.";
+  };
+};
+
 function logMove() {
   for (var i = 0; i < gameSquares.length; i++) {
     if (event.target.id === gameSquares[i].id && p1) {
       gameSquares[i].disabled = true;
+      gameSquares[i].removeEventListener('click', makeMove);
       addToPlayer1(gameSquares[i]);
     } else if (event.target.id === gameSquares[i].id && !p1) {
       gameSquares[i].disabled = true;
@@ -95,12 +129,10 @@ function logMove() {
 };
 
 function addToPlayer1(move) {
-  move.classList.add('player-1');
   p1Moves.push(move.id);
 };
 
 function addToPlayer2(move) {
-  move.classList.add('player-2');
   p2Moves.push(move.id);
 };
 
@@ -162,30 +194,33 @@ function compareArrays(playerMoves, winCombo) {
 
 function player1Wins() {
   player1WinTotal++;
-  announceResult('Player 1');
+  announceResult('Steve');
   resetGame();
 };
 
 function player2Wins() {
   player2WinTotal++;
-  announceResult('Player 2');
+  announceResult('Tony');
   resetGame();
 };
 
 function announceResult(player) {
   hide(gameGrid);
+  hide(turnDesignator);
   show(gameResult);
   gameResult.innerText = `${player} wins!`;
 };
 
 function declareDraw() {
   hide(gameGrid);
+  hide(turnDesignator);
   show(gameResult);
   gameResult.innerText = `The cat got the game!`;
   resetGame();
 };
 
 function resetGame() {
+  totalGames++
   window.setTimeout(cleanGameBoard, 2500);
 };
 
@@ -195,6 +230,7 @@ function changePlayer() {
   } else if (!p1) {
     p1 = true;
   };
+  designateTurn();
   return p1;
 };
 

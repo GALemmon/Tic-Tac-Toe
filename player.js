@@ -1,5 +1,7 @@
 class Player {
-  constructor() {
-    
+  constructor(name,) {
+    this.name = name;
+    this.wins = 0;
+    this.moves = [];
   }
 }
