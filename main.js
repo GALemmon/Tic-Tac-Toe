@@ -30,8 +30,7 @@ var winningCombos = [
   ['square1', 'square5', 'square9'],
   ['square3', 'square5', 'square7'],
 ];
-var games = [];
-var currentGame = games.slice(-1);
+var currentGame = [];
 var totalGames = 0;
 var p1 = true;
 var player1WinTotal = 0;
@@ -54,9 +53,9 @@ square9.addEventListener('click', makeMove);
 
 //---------------- Functions ----------------
 function cleanGameBoard() {
-  // currentGame = [];
+  currentGame = [];
   newGame = new Game();
-  games.push(newGame);
+  currentGame.push(newGame);
   resetGlobalVars();
   resetSquares();
   resetHTML();
