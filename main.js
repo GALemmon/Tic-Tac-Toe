@@ -30,17 +30,10 @@ var winningCombos = [
   ['square1', 'square5', 'square9'],
   ['square3', 'square5', 'square7'],
 ];
-var currentGame = [];
-var totalGames = 0;
-var p1 = true;
-var player1WinTotal = 0;
-var player2WinTotal = 0;
-var p1Moves = [];
-var p2Moves = [];
-var totalMovesTaken = 0;
+var games = [];
 
 //------------ Event Listners ---------------
-window.addEventListener('load', cleanGameBoard);
+window.addEventListener('load', initialGame);
 square1.addEventListener('click', makeMove);
 square2.addEventListener('click', makeMove);
 square3.addEventListener('click', makeMove);
@@ -52,21 +45,18 @@ square8.addEventListener('click', makeMove);
 square9.addEventListener('click', makeMove);
 
 //---------------- Functions ----------------
-function cleanGameBoard() {
-  currentGame = [];
+function initialGame() {
   newGame = new Game();
-  currentGame.push(newGame);
-  resetGlobalVars();
-  resetSquares();
-  resetHTML();
-  selectFirstPlayer();
+  games.push(newGame);
+  games[games.length - 1].selectFirstPlayer();
 };
 
-function resetGlobalVars() {
-  p1 = currentGame[0].currentPlayer1;
-  p1Moves = currentGame[0].player1Moves;
-  p2Moves = currentGame[0].player2Moves;
-  totalMovesTaken = 0;
+function cleanGameBoard() {
+  newGame = new Game();
+  games.push(newGame);
+  resetSquares();
+  resetHTML();
+  games[games.length - 1].selectFirstPlayer();
 };
 
 function resetSquares() {
@@ -78,93 +68,41 @@ function resetSquares() {
 };
 
 function resetHTML() {
-  player1WinCounter.innerText = `${player1WinTotal}`;
-  player2WinCounter.innerText = `${player2WinTotal}`;
+  displayWins();
   gameResult.innerText = '';
   hide(gameResult);
   show(gameGrid);
   show(turnDesignator);
 };
 
-function selectFirstPlayer() {
-  if (totalGames === 0 || totalGames % 2 === 0) {
-    p1 = true;
-  } else {
-    p1 = false;
+function displayWins() {
+  var player1WinTotal = 0;
+  var player2WinTotal = 0;
+  for (var i = 0; i < games.length; i++) {
+    if (games[i].player1Wins) {
+      player1WinTotal++;
+    };
+    if (games[i].player2Wins) {
+      player2WinTotal++;
+    };
   };
-  designateTurn();
+  player2WinCounter.innerText = `${player2WinTotal}`;
+  player1WinCounter.innerText = `${player1WinTotal}`;
 };
 
 function makeMove() {
-  totalMovesTaken++;
-  designateTurn();
-  logMove();
-  markSquares();
+  games[games.length - 1].logMove();
+  games[games.length - 1].markSquares();
   checkWin();
   checkDraw();
-  changePlayer();
-};
-
-function designateTurn() {
-  if (p1) {
-    turnDesignator.innerText = "Steve's turn.";
-  };
-  if (!p1) {
-    turnDesignator.innerText = "Tony's turn.";
-  };
-};
-
-function logMove() {
-  for (var i = 0; i < gameSquares.length; i++) {
-    if (event.target.id === gameSquares[i].id && p1) {
-      gameSquares[i].disabled = true;
-      gameSquares[i].removeEventListener('click', makeMove);
-      addToPlayer1(gameSquares[i]);
-    } else if (event.target.id === gameSquares[i].id && !p1) {
-      gameSquares[i].disabled = true;
-      addToPlayer2(gameSquares[i]);
-    };
-  };
-};
-
-function addToPlayer1(move) {
-  p1Moves.push(move.id);
-};
-
-function addToPlayer2(move) {
-  p2Moves.push(move.id);
-};
-
-function markSquares() {
-  for (var i = 0; i < p1Moves.length; i++) {
-    markPlayer1Square();
-  };
-  for (var i = 0; i < p2Moves.length; i++) {
-    markPlayer2Square();
-  };
-};
-
-function markPlayer1Square() {
-  for (var i = 0; i < p1Moves.length; i++) {
-    var square = document.getElementById(`${p1Moves[i]}`);
-    square.classList.add('disabled');
-    square.classList.add('player1');
-  };
-};
-
-function markPlayer2Square() {
-  for (var i = 0; i < p2Moves.length; i++) {
-    var square = document.getElementById(`${p2Moves[i]}`);
-    square.classList.add('disabled');
-    square.classList.add('player2');
-  };
+  games[games.length - 1].changePlayer();
 };
 
 function checkWin() {
   for (i = 0; i < winningCombos.length; i++) {
-    if (compareArrays(p1Moves, winningCombos[i])) {
+    if (compareArrays(games[games.length - 1].player1.moves, winningCombos[i])) {
       return player1Wins();
-    } if (compareArrays(p2Moves, winningCombos[i])) {
+    } if (compareArrays(games[games.length - 1].player2.moves, winningCombos[i])) {
       return player2Wins();
     };
   };
@@ -172,16 +110,16 @@ function checkWin() {
 
 function checkWinOnly() {
   for (i = 0; i < winningCombos.length; i++) {
-    if (compareArrays(p1Moves, winningCombos[i])) {
+    if (compareArrays(games[games.length - 1].player1.moves, winningCombos[i])) {
       return true;
-    } if (compareArrays(p2Moves, winningCombos[i])) {
+    } if (compareArrays(games[games.length - 1].player2.moves, winningCombos[i])) {
       return true;
     };
   };
 };
 
 function checkDraw() {
-  if (totalMovesTaken === 9) {
+  if (games[games.length - 1].totalMovesTaken === 9) {
     return checkWinOnly() ? checkWinOnly() : declareDraw();
   };
 };
@@ -192,14 +130,14 @@ function compareArrays(playerMoves, winCombo) {
 };
 
 function player1Wins() {
-  player1WinTotal++;
-  announceResult('Steve');
+  games[games.length - 1].player1Wins++;
+  announceResult(games[games.length - 1].player1.name);
   resetGame();
 };
 
 function player2Wins() {
-  player2WinTotal++;
-  announceResult('Tony');
+  games[games.length - 1].player2Wins++;
+  announceResult(games[games.length - 1].player2.name);
   resetGame();
 };
 
@@ -219,18 +157,7 @@ function declareDraw() {
 };
 
 function resetGame() {
-  totalGames++
   window.setTimeout(cleanGameBoard, 2500);
-};
-
-function changePlayer() {
-  if (p1) {
-    p1 = !p1;
-  } else if (!p1) {
-    p1 = true;
-  };
-  designateTurn();
-  return p1;
 };
 
 function hide(element) {

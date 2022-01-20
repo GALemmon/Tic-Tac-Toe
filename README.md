@@ -22,6 +22,13 @@ Do you enjoy the classic game Tic-Tac-Toe?  Even if you don't, here is a slightl
 #### How To Use
 
 To play, simply click on one of the game squares after choosing to be Tony or Steve.  The game will handle everything else. A reminder of whose turn it is will appear above the game board.  To reset the win counters, refresh the page.
+
+- Click a square for player 1. This will deploy a hero and make your square.
+- Click a square for player 2. This will deploy a hero and make your square.
+- Play though a game of Tic-Tac-Toe.
+- If either player wins, the game will announce the win, add a win to the win counter, and reset.
+- In the event of a draw, the game will announce the draw and reset.
+- The win counters will persist until the page is reloaded.
 ---
 #### Features
 
@@ -29,6 +36,8 @@ To play, simply click on one of the game squares after choosing to be Tony or St
 - Winning combinations will be scored as wins.
 - Starting player will be rotated automatically.
 - A draw game will reset the game board without adding to a player's score.
+- Scores will persist until page refresh.
+
 ---
 #### Instructions for Viewing
 
